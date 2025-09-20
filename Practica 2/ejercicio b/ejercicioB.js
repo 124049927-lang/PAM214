@@ -1,4 +1,3 @@
-
 const productos = [
   { nombre: "Laptop", precio: 12000 },
   { nombre: "Mouse", precio: 250 },

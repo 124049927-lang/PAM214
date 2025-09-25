@@ -1,0 +1,1 @@
+ export let restar = (a,b) => a - b;

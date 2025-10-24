@@ -80,10 +80,10 @@ const styles = StyleSheet.create({
   input: {
     height: 50,
     borderColor: 'gray',
-    borderWidth: 1, //Sirve para ver el borde del input
-    borderRadius: 8, // Bordes redondeados
-    paddingHorizontal: 15, // Espacio interno a los lados
-    marginBottom: 20, // Espacio debajo del input
+    borderWidth: 1, 
+    borderRadius: 8, 
+    paddingHorizontal: 15, 
+    marginBottom: 20, 
     fontSize: 16,
   },
 });

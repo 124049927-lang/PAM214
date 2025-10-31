@@ -1,63 +1,115 @@
-import { Text, StyleSheet, View, SafeAreaView, ImageBackground, TextInput, Button, Alert } from 'react-native'
+import { Text, StyleSheet, View, SafeAreaView, ImageBackground, TextInput, Button, Alert, Switch, TouchableOpacity, Image, } from 'react-native'
 import { useEffect, useState, Component } from 'react';
 
 export default function ActRepaso() {
 
-    const [nombre, setNombre] = useState("")
-    const [contraseña, setCorreo] = useState("")
-    
-    const [showSplash, setShowSplash] = useState(true)
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            setShowSplash(false)
-        }, 1000);
-        return () => clearTimeout(timer);
-    }, []);
+  const [nombre, setNombre] = useState("")
+  const [correo, setCorreo] = useState("")
+  const [aceptarTerminos, setAceptarTerminos] = useState(false)
+  const [showSplash, setShowSplash] = useState(true)
 
-    if (showSplash) {
-        return (
-            <View style={styles.splashContainer}>
-                <Text style={styles.splashText}>Bienvenido a la app!</Text>
-            </View>
-        )
-    }
 
-      const mostrarAlerta = () => {
-        if ([nombre.trim(), contraseña.trim(), Texto.trim()].includes("") ) {
-          Alert.alert('Error, Por favor ingresa los datos correcpondientes.');
-          
-        } else {
-          Alert.alert(`Hola!, ${nombre}!`, 'Los datos se ha registrado con exito.');
-         
-          setNombre('');
-          setPassword('');
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowSplash(false)
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, []);
 
-        }
-      };
-
-   return (
-  <SafeAreaView style={{ flex: 1 }}>
-    <ImageBackground
-      source={require('../assets/f1.jpg')}
-      style={styles.background}
-    >
-      <View style={styles.overlay}>
-        <Text style={styles.title}>Registro de Usuario</Text>
-
+  if (showSplash) {
+    return (
+      <View style={styles.splashContainer}>
+        <Image
+          source={require('../assets/logo.png')}
+          style={{ width: 200, height: 200, marginBottom: 20 }}
+        />
+        <Text style={styles.splashText}>Bienvenido a la app!</Text>
       </View>
+    )
+  }
+
+  const Registro = () => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!emailRegex.test(correo)) {
+      Alert.alert('Error', 'Por favor ingresa un correo electrónico válido.');
+      return;
+    }
+    if ([nombre.trim(), correo.trim()].includes("")) {
+      Alert.alert('Error Por favor ingresa los datos correspondientes.');
+      return;
+    }
+    if (!aceptarTerminos) {
+      Alert.alert('Debes aceptar los términos y condiciones para continuar.');
+      return;
+    }
+    else {
+
+      Alert.alert("Registro exitoso", `Nombre: ${nombre}\nEmail: ${correo}`);
+
+      setNombre('');
+      setCorreo('');
+      setAceptarTerminos(false);
+
+    }
+  };
 
 
-    </ImageBackground>
-  </SafeAreaView>
-);
 
+  return (
+    <SafeAreaView style={{ flex: 1 }}>
+      <ImageBackground
+        source={require('../assets/f1.jpg')}
+        style={styles.background}
+      >
+        <View style={styles.overlay}>
+          <Text style={styles.title}>Registro de Usuario</Text>
+
+          <TextInput
+            style={styles.input}
+            placeholder="Nombre completo"
+            value={nombre}
+            onChangeText={setNombre}
+            keyboardType="default"
+            autoCapitalize="words"
+            placeholderTextColor={"#ffffff9d"}
+          />
+
+          <TextInput
+            style={styles.input}
+            placeholder="Correo electrónico"
+            value={correo}
+            onChangeText={setCorreo}
+            keyboardType="email-address"
+            autoCapitalize='none'
+            autoCorrect={false}
+            placeholderTextColor={"#ffffff9d"}
+          />
+
+          <View style={styles.terminosContainer}>
+            <Switch
+              value={aceptarTerminos}
+              onValueChange={setAceptarTerminos}
+              thumbColor={aceptarTerminos ? "#00c853" : "#f4f3f4"}
+            />
+            <Text style={styles.terminosTexto}>Aceptar términos y condiciones</Text>
+          </View>
+
+          <TouchableOpacity onPress={Registro}>
+            <Text style={styles.btnRegistrar}>Registrarse</Text>
+          </TouchableOpacity>
+        </View>
+      </ImageBackground>
+    </SafeAreaView>
+  );
 }
+
 
 const styles = StyleSheet.create({
 
   splashContainer: {
     flex: 1,
-    backgroundColor: '#000000ff',
+    backgroundColor: '#c0c0c0ff',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -80,8 +132,9 @@ const styles = StyleSheet.create({
 
   overlay: {
     backgroundColor: 'rgba(0,0,0,0.5)',
-    padding: 100,
-    borderRadius: 100,
+    padding: 20,
+    borderRadius: 30,
+    width: '90%',
 
   },
 
@@ -93,15 +146,34 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 
- input: {
+  input: {
     height: 50,
-    borderColor: 'gray',
-    borderWidth: 1, 
-    borderRadius: 8, 
-    paddingHorizontal: 15, 
-    marginBottom: 20, 
+    borderColor: '#fff',
+    borderWidth: 1,
+    borderRadius: 8,
+    paddingHorizontal: 15,
+    marginBottom: 20,
     fontSize: 16,
+    color: '#fff',
 
   },
 
+  terminosContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+
+  terminosTexto: {
+    color: '#fff',
+    marginLeft: 10,
+    fontSize: 16,
+  },
+
+  btnRegistrar: {
+    textAlign: 'center',
+    color: '#007aff',
+    fontSize: 18,
+    fontWeight: '600',
+  },
 });

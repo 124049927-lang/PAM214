@@ -10,6 +10,8 @@ import FLySL from './FySL';
 import Modal from './ModalScreen';
 import bottomsheet from './BottonS';
 import BS from './BottonS';
+import ActRepaso from './Repaso';
+
 
 
 export default function MenuScreen() {
@@ -35,6 +37,8 @@ export default function MenuScreen() {
             return<ModalScreen/>
         case 'bottom':
             return<BS/>
+        case 'repaso':
+            return<ActRepaso/>
         case 'menu':
             default:
                 return (
@@ -49,6 +53,7 @@ export default function MenuScreen() {
                     <Button onPress={()=>setCreen('list')} title='Pract: FlatList y Section List'/>
                     <Button onPress={()=>setCreen('modal')} title='Pract: Modal'/>
                     <Button onPress={()=>setCreen('bottom')} title='Pract: Bottom Sheet'/>
+                    <Button onPress={()=>setCreen('repaso')} title='Pract: Repaso'/>
                     </View>
                 )
     }

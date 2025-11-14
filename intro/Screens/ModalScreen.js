@@ -1,13 +1,109 @@
-import { Text, StyleSheet, View } from 'react-native'
+import { Text, StyleSheet, View, Modal, TouchableOpacity } from 'react-native'
+import React, { useState } from 'react';
 
 
-export default function Modal() {
+export default function ModalScreen() {
+  const [showmodal, setShowmodal] = useState(false);
 
     return (
-      <View>
-        <Text>Proximamente..........Modal</Text>
+      <View styles={styles.contenedorMain}>
+        <TouchableOpacity style={styles.botonAbrir} onPress={() => setShowmodal(true)} activeOpacity={0.8}>
+          <Text style={styles.textoBoton}>Abrir Modal</Text>
+        </TouchableOpacity>
+
+        <Modal
+        visible={showmodal}
+        transparent={true}
+        animationType='slide'
+        onRequestClose={() => setShowmodal(false)}
+        >
+        <View style={styles.contenedorModal}>
+          <View style={styles.modal}>
+            <Text style={styles.titulo}>Hola!</Text>
+            <Text style={styles.mensaje}>Est es un modal</Text>
+            <TouchableOpacity style={styles.botonCerrar} onPress={() => setShowmodal(false)} activeOpacity={0.8}>
+              <Text style={styles.textoCerrar}>Cerrar</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        </Modal>
+        
+
+
+        
       </View>
     )
 }
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+  contenedorMain: {
+    flex: 1,
+    backgroundColor: '#36F79F',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+
+  botonAbrir: {
+    backgroundColor: '#007AFF',
+    paddingVertical: 12,
+    paddingHorizontal: 25,
+    borderRadius: 10,
+    elevation: 3,
+    shadowColor: '#000',
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+  },
+  textoBoton: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+
+  contenedorModal: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0,0,0,0.4)',
+  },
+
+  modal: {
+    width: '80%',
+    backgroundColor: '#fff',
+    paddingVertical: 30,
+    paddingHorizontal: 25,
+    borderRadius: 15,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOpacity: 0.25,
+    shadowOffset: { width: 0, height: 3 },
+    shadowRadius: 5,
+    elevation: 5,
+  },
+
+  titulo: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 10,
+    color: '#333',
+  },
+  mensaje: {
+    fontSize: 15,
+    color: '#666',
+    textAlign: 'center',
+    marginBottom: 20,
+  },
+
+  botonCerrar: {
+    backgroundColor: '#F7363C',
+    paddingVertical: 10,
+    paddingHorizontal: 30,
+    borderRadius: 8,
+  },
+  textoCerrar: {
+    color: '#fff',
+    fontWeight: 'bold',
+    fontSize: 15,
+  },
+});

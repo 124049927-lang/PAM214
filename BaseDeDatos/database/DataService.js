@@ -28,9 +28,8 @@ class DatabaseService {
       const data = localStorage.getItem(this.storageKey);
       return data ? JSON.parse(data) : [];
     } else {
-      // Nota: La consulta SQL en la imagen tiene un error ("SELECT FROM usuarios..."). Se usa una versión corregida para Select All.
-      // return await this.db.getAllAsync('SELECT FROM usuarios ORDER BY id DESC');
-      return await this.db.getAllAsync('SELECT * FROM usuarios ORDER BY id DESC'); 
+      // Nota: getAllAsync es correcto para obtener múltiples filas
+      return await this.db.getAllAsync('SELECT * FROM usuarios ORDER BY id DESC');
     }
   }
 
@@ -55,6 +54,56 @@ class DatabaseService {
         nombre,
         fecha_creacion: new Date().toISOString()
       };
+    }
+  }
+
+  // NUEVO: Método para actualizar usuario
+  async update(id, nombre) {
+    if (Platform.OS === 'web') {
+      const usuarios = await this.getAll();
+      const usuarioIndex = usuarios.findIndex(u => u.id === id);
+      if (usuarioIndex !== -1) {
+        usuarios[usuarioIndex].nombre = nombre;
+        localStorage.setItem(this.storageKey, JSON.stringify(usuarios));
+        return usuarios[usuarioIndex];
+      }
+      throw new Error('Usuario no encontrado');
+    } else {
+      const result = await this.db.runAsync(
+        'UPDATE usuarios SET nombre = ? WHERE id = ?',
+        nombre, id
+      );
+      if (result.changes > 0) {
+        // CORRECCIÓN: Usar getFirstAsync para obtener una sola fila
+        const usuarioActualizado = await this.db.getFirstAsync('SELECT * FROM usuarios WHERE id = ?', id);
+        return usuarioActualizado;
+      }
+      throw new Error('Usuario no encontrado');
+    }
+  }
+
+  // NUEVO: Método para eliminar usuario
+  async delete(id) {
+    if (Platform.OS === 'web') {
+      const usuarios = await this.getAll();
+      const usuarioIndex = usuarios.findIndex(u => u.id === id);
+      if (usuarioIndex !== -1) {
+        const usuarioEliminado = usuarios.splice(usuarioIndex, 1)[0];
+        localStorage.setItem(this.storageKey, JSON.stringify(usuarios));
+        return usuarioEliminado;
+      }
+      throw new Error('Usuario no encontrado');
+    } else {
+      // CORRECCIÓN: Usar getFirstAsync para obtener una sola fila
+      const usuarioAEliminar = await this.db.getFirstAsync('SELECT * FROM usuarios WHERE id = ?', id);
+      if (!usuarioAEliminar) {
+        throw new Error('Usuario no encontrado');
+      }
+      const result = await this.db.runAsync('DELETE FROM usuarios WHERE id = ?', id);
+      if (result.changes > 0) {
+        return usuarioAEliminar;
+      }
+      throw new Error('No se pudo eliminar el usuario');
     }
   }
 }
